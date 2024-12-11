@@ -16,6 +16,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'website_title' => env('WEBSITE_TITLE', 'DOK Assessment'),
+    'username_domain' => env('USERNAME_DOMAIN', '@dok-assessment'),
 
     /*
     |--------------------------------------------------------------------------

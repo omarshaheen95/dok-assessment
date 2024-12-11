@@ -75,11 +75,11 @@ class StudentImport implements ToModel,SkipsOnFailure,SkipsOnError,WithHeadingRo
             }
             $names = explode(' ', $full_name);
             $number = date('Y') . '' . rand(1, 999);
-            $username = $names[0] . '' . $number . '@identity';
+            $username = $names[0] . '' . $number . '@'.config('app.username_domain');;
             $pre_username = Student::query()->where('email', $username)->first();
             while (!is_null($pre_username)) {
                 $number = date('Y') . rand(1, 99999);
-                $username = $names[0] . '' . $number . '@identity';
+                $username = $names[0] . '' . $number . '@'.config('app.username_domain');;
                 $pre_username = Student::query()->where('email', $username)->first();
             }
             if ($row['Gender'] == 1) {

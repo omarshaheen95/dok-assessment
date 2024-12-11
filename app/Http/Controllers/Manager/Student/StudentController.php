@@ -239,7 +239,7 @@ class StudentController extends Controller
         $data = [];
         $res = $client->request('POST', 'https://pdfservice.arabic-uae.com/getpdf.php', [
             'form_params' => [
-                'platform' => 'abt-identity',
+                'platform' => 'dok-assessment',
                 'urls' => $urls,
                 'data' => $data,
             ],

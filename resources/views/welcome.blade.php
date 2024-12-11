@@ -21,15 +21,15 @@
     <!-- Mobile Specific Metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <meta name="description" content="My Identity Assessment">
-    <meta name="keywords" content="My Identity Assessment">
-    <meta name="author" content="My Identity Assessment">
+    <meta name="description" content="{{config('app.website_title')}}">
+    <meta name="keywords" content="{{config('app.website_title')}}">
+    <meta name="author" content="{{config('app.website_title')}}">
 
     <link rel="stylesheet" href="{{asset('assets_v1/lib/bootstrap-5.0.2/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets_v1/auth_css/custom.css')}}?v1">
     <link rel="stylesheet" href="{{asset('assets_v1/auth_css/responsive.css')}}">
     <link rel="shortcut icon" href="{{!settingCache('logo_min')? asset('logo_min.svg'):asset(settingCache('logo_min'))}}" />
-    <title>My Identity Assessment</title>
+    <title>{{config('app.website_title')}}</title>
 </head>
 <body>
 
