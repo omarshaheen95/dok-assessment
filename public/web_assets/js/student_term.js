@@ -29,16 +29,7 @@ function getAndSetResults() {
     });
 }
 
-//show or hide file or textarea input
-function showArticleQTextarea(question_id){
-    $('#article_text_'+question_id).removeClass('d-none')
-    $('#article_file_'+question_id).addClass('d-none')
-}
 
-function showArticleQFileInput(question_id){
-    $('#article_text_'+question_id).addClass('d-none')
-    $('#article_file_'+question_id).removeClass('d-none')
-}
 //Validation
 function validation(){
     let errors = 0
@@ -48,18 +39,6 @@ function validation(){
         // console.log(questionId+'***'+questionType)
 
         switch (questionType) {
-            case 'true_false':{
-                let hasAnswer = $(this).find('.answer-group input[type="radio"]:checked').length > 0;
-                if (!hasAnswer){
-                    $(this).find(".answer-group").addClass("border border-danger");
-                }else {
-                    $(this).find(".answer-group").removeClass("border border-danger");
-                }
-                if (!hasAnswer){
-                    errors++;
-                }
-                break;
-            }
             case 'multiple_choice':{
                 let hasAnswer ;
                 if ($(this).find('.answer-group input[type="radio"]').length > 0){
@@ -71,51 +50,6 @@ function validation(){
                     errors++;
                 }else {
                     $(this).find(".answer-group").removeClass("border border-danger");
-                }
-
-                break;
-            }case 'matching':{
-                let hasAnswer = $(this).find('.matchOptions .matching-answer-input').length === 0
-                if (!hasAnswer){
-                    $(this).find(".row .item-container").addClass("border border-danger p-3");
-                    errors++;
-                }else {
-                    $(this).find(".row .item-container").removeClass("border border-danger p-3");
-                }
-
-                break;
-            }case 'sorting':{
-                let hasAnswer = $(this).find('.sortOptions .sort-answer-input').length === 0
-                if (!hasAnswer){
-                    $(this).find(".row .item-container").addClass("border border-danger p-3");
-                    errors++;
-                }else {
-                    $(this).find(".row .item-container").removeClass("border border-danger p-3");
-                }
-
-                break;
-            }
-            case 'fill_blank':{
-                let hasAnswer = $(this).find('.fillBlankOptions .blank-answer-input').length === 0
-                if (!hasAnswer){
-                    $(this).find(".blankAnswers").addClass("border border-danger p-3");
-                    errors++;
-                }else {
-                    $(this).find(".blankAnswers").removeClass("border border-danger p-3");
-                }
-
-                break;
-            }
-            case 'article':{
-                let hasAnswer =
-                    $.trim($(this).find('.answer-box textarea').val()).length === 0 &&
-                    $(this).find('.answer-box .files-upload')[0].files.length === 0
-
-                if (hasAnswer){
-                    $(this).find(".answer-box").addClass("border border-danger p-3");
-                    errors++;
-                }else {
-                    $(this).find(".answer-box").removeClass("border border-danger p-3");
                 }
 
                 break;
@@ -147,23 +81,24 @@ $(document).ready(function () {
     ---------------------------------------------------*/
     let clock = $('#clock');
     if (clock.length > 0 && typeof TIME !== 'undefined' && TIME) {
+        // `TIME` is now in minutes
         var qnt = TIME,
-            val = (qnt * 60 * 60 * 1000),
+            val = qnt * 60 * 1000, // Convert minutes to milliseconds
             selectedDate = new Date().valueOf() + val;
 
         clock.countdown(selectedDate.toString())
             .on('update.countdown', function (event) {
-                var format = '%H:%M:%S';
-                $(this).html(event.strftime(format));
-                $("#timer-ago").val(event.strftime(format));
-                //localStorage.setItem("timer_val", event.offset.totalSeconds);
+                var format = '%H:%M:%S'; // Display format
+                $(this).html(event.strftime(format)); // Update the clock display
+                $("#timer-ago").val(event.strftime(format)); // Update a hidden input field
+                //localStorage.setItem("timer_val", event.offset.totalSeconds); // Optional, if needed
             })
             .on('finish.countdown', function (event) {
                 $(this).parent().addClass('disabled').html('This Time has expired!');
-                showToastify("The Time has expired!", "error");
+                showToastify("The Time has expired!", "error"); // Show a notification
             });
-
     }
+
 
 
     /*---------------------------------------------------

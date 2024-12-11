@@ -24,15 +24,13 @@ class LevelRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'name' => 'required',
             'grade' => 'required',
             'slug' => 'nullable',
             'year_id' => 'required',
             'section' => 'required|in:1,2',
         ];
-        foreach(\Config::get('app.languages') as $locale)
-        {
-            $rules["name.$locale"] = 'required';
-        }
+
         return $rules;
     }
 }

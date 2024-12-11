@@ -19,7 +19,7 @@ use Spatie\Translatable\HasTranslations;
 
 class School extends Authenticatable
 {
-    use Notifiable, SoftDeletes, HasTranslations,CascadeSoftDeletes, LogsActivity;
+    use Notifiable, SoftDeletes,CascadeSoftDeletes, LogsActivity;
     protected static $logAttributes = ['name', 'email', 'password', 'logo', 'curriculum_type', 'country', 'active', 'available_year_id'];
     protected static $recordEvents = ['updated', 'deleted'];
     protected static $logOnlyDirty = true;
@@ -31,7 +31,6 @@ class School extends Authenticatable
         ];
     protected $cascadeDeletes = ['students','school_grades'];
 
-    public $translatable = ['name'];
 
     protected $hidden = [
         'password', 'remember_token',
@@ -61,10 +60,7 @@ class School extends Authenticatable
     {
         return $query
             ->when($name = $request->get('name', false), function (Builder $query) use ($name) {
-                $query->where(function (Builder $query) use ($name) {
-                    $query->where(DB::raw('LOWER(name->"$.ar")'), 'like', '%' . $name . '%')
-                        ->orWhere(DB::raw('LOWER(name->"$.en")'), 'like', '%' . $name . '%');
-                });
+                $query->where('name', 'like', '%' . $name . '%');
             })->when($email = $request->get('email', false), function (Builder $query) use ($email) {
                 $query->where('email', $email);
             })->when($mobile = $request->get('mobile', false), function (Builder $query) use ($mobile) {

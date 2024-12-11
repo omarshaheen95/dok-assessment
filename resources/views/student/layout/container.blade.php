@@ -1,14 +1,5 @@
-@if($student->level->arab)
-@php
-    app()->setLocale('ar')
-@endphp
-@else
-@php
-    app()->setLocale('en')
-@endphp
-@endif
 <!doctype html>
-<html lang="{{$student->level->arab?'ar':'en'}}" dir="{{$student->level->arab?'rtl':'ltr'}}">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <title>My Identity Assessment | @yield('title')</title>
@@ -18,11 +9,8 @@
     <link rel="shortcut icon" href="{{!settingCache('logo_min')? asset('logo_min.svg'):asset(settingCache('logo_min'))}}" />
 
     @yield('pre-style')
-    @if($student->level->arab)
-        <link href="{{asset('web_assets/css/bootstrap.rtl.min.css')}}" rel="stylesheet">
-    @else
-        <link href="{{asset('web_assets/css/bootstrap.min.css')}}" rel="stylesheet">
-    @endif
+
+    <link href="{{asset('web_assets/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('web_assets/css/custom.css')}}?v={{time()}}" rel="stylesheet">
     <link href="{{asset('web_assets/css/responsive.css')}}?v={{time()}}" rel="stylesheet">
     @yield('style')

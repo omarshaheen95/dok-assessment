@@ -11,10 +11,14 @@ use App\Helpers\Response;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Manager\ImportQuestionFileRequest;
 use App\Imports\QuestionsImport;
+use App\Models\OptionQuestion;
+use App\Models\Question;
 use App\Models\QuestionFile;
 use App\Models\Year;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use PhpOption\Option;
 use Yajra\DataTables\Facades\DataTables;
 
 class QuestionFileController extends Controller
@@ -90,46 +94,58 @@ class QuestionFileController extends Controller
         $data['author_type'] = auth()->guard(getGuard())->user()->getMorphClass();
         $data['author_id'] = auth()->guard(getGuard())->id();
         $file = $request->file('file');
-        //upload file
-        $upload_file = uploadFile($file, '/questions-files-imported');
-        //save file data
-        $create_file = QuestionFile::query()->create([
-            'author_type' => $data['author_type'],
-            'author_id' => $data['author_id'],
-            'original_file_name' => $file->getClientOriginalName(),
-            'file_name' => $upload_file['new_name'],
-            'file_path' => $upload_file['path'],
-            'status' => 'New',
-            'process_type' => 'Create',
-            'term_id' => $data['term_id'],
-            'level_id' => $data['level_id'],
-        ]);
 
-        //import students
-        $student_import = new QuestionsImport($request, $create_file);
-        \Maatwebsite\Excel\Facades\Excel::import($student_import, public_path($create_file->file_path));
 
-        $file_data = [
-            'created_rows_count' => $student_import->getRowsCount(),
-            'updated_rows_count' => 0,
-            'deleted_rows_count' => 0,
-            'failed_rows_count' => $student_import->getFailedRowCount(),
-            'failures' => $student_import->getFailures(),
-        ];
-        if ($student_import->getError()) {
-            $file_data['status'] = 'Failed';
-            $file_data['error'] = $student_import->getError();
-            $create_file->update($file_data);
-            return redirect()->route(getGuard() . '.question-file.index')->withErrors([$student_import->getExceptionMessage()]);
-        }
-
-        if ($student_import->getFailures()) {
-            $file_data['status'] = 'Failed'; //Failures
+        $questions_count = OptionQuestion::query()->whereRelation('question', 'term_id', $data['term_id'])->count();
+        if ($questions_count > 0) {
+            return redirect()->route(getGuard() . '.question-file.index')->with('message', t('The Assessment questions content already exist'))->with('m-class', 'error');
         } else {
-            $file_data['status'] = 'Completed'; //Complete
+            Question::query()->where('term_id', $data['term_id'])->forceDelete();
         }
+        DB::transaction(function () use ($request,$file,$data) {
+            //upload file
+            $upload_file = uploadFile($file, '/questions-files-imported');
+            //save file data
+            $create_file = QuestionFile::query()->create([
+                'author_type' => $data['author_type'],
+                'author_id' => $data['author_id'],
+                'original_file_name' => $file->getClientOriginalName(),
+                'file_name' => $upload_file['new_name'],
+                'file_path' => $upload_file['path'],
+                'status' => 'New',
+                'process_type' => 'Create',
+                'term_id' => $data['term_id'],
+                'level_id' => $data['level_id'],
+            ]);
 
-        $create_file->update($file_data);
+
+            //import students
+            $student_import = new QuestionsImport($request, $create_file);
+            \Maatwebsite\Excel\Facades\Excel::import($student_import, public_path($create_file->file_path));
+
+            $file_data = [
+                'created_rows_count' => $student_import->getRowsCount(),
+                'updated_rows_count' => 0,
+                'deleted_rows_count' => 0,
+                'failed_rows_count' => $student_import->getFailedRowCount(),
+                'failures' => $student_import->getFailures(),
+            ];
+            if ($student_import->getError()) {
+                $file_data['status'] = 'Failed';
+                $file_data['error'] = $student_import->getError();
+                $create_file->update($file_data);
+                return redirect()->route(getGuard() . '.question-file.index')->withErrors([$student_import->getExceptionMessage()]);
+            }
+
+            if ($student_import->getFailures()) {
+                $file_data['status'] = 'Failed'; //Failures
+            } else {
+                $file_data['status'] = 'Completed'; //Complete
+            }
+
+            $create_file->update($file_data);
+        });
+
         return redirect()->route(getGuard() . '.question-file.index')->with('message', t('File Imported Successfully'));
     }
 

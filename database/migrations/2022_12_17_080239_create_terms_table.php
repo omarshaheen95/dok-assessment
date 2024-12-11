@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('terms', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
+            $table->string('name');
             $table->unsignedBigInteger('level_id');
             $table->enum('round', ['september', 'february', 'may']);
             $table->boolean('active')->default(1);

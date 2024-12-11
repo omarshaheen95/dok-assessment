@@ -13,25 +13,19 @@ use Spatie\Translatable\HasTranslations;
 
 class Year extends Model
 {
-    use SoftDeletes, HasTranslations, LogsActivity;
+    use SoftDeletes, LogsActivity;
     protected static $logAttributes = ['name', 'slug','default'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
     protected $fillable = [
         'name', 'slug','default'
     ];
-    public $translatable = ['name'];
 
     public function scopeSearch(Builder $query, Request $request)
     {
         return $query
             ->when($name = $request->get('name', false), function (Builder $query) use ($name) {
-                $query->where(function (Builder $query) use ($name) {
-                    $query->where(function (Builder $query) use ($name) {
-                        $query->where(DB::raw('LOWER(name->"$.ar")'), 'like', '%' . $name . '%')
-                            ->orWhere(DB::raw('LOWER(name->"$.en")'), 'like', '%' . $name . '%');
-                    });
-                });
+                $query->where('name', 'like', '%' . $name . '%');
             })->when($value = $request->get('row_id',[]),function (Builder $query) use ($value){
                 $query->whereIn('id', $value);
             });

@@ -11,7 +11,7 @@
     </li>
     <li class="breadcrumb-item text-muted">
         {{$title}}
-        {{ isset($school) ? '/'.$school->getTranslation('name', app()->getLocale()) : '' }}
+        {{ isset($school) ? '/'.$school->name : '' }}
     </li>
 @endpush
 @section('content')
@@ -80,15 +80,13 @@
         </div>
 
         <div class="form-group row">
-            @foreach(\Config::get('app.languages') as $locale)
-                <div class="col-lg-4 mb-2">
-                    <label class="form-label mb-1">{{t('School Name')}} : ({{$locale}})</label>
-                    <input name="name[{{$locale}}]" type="text" placeholder="{{t('School Name')}}"
-                           class="form-control"
-                           value="{{ isset($school) ? $school->getTranslation('name', $locale) : old("name[$locale]") }}"
-                    />
-                </div>
-            @endforeach
+            <div class="col-lg-4 mb-2">
+                <label class="form-label mb-1">{{t('School Name')}}</label>
+                <input name="name" type="text" placeholder="{{t('School Name')}}"
+                       class="form-control"
+                       value="{{ isset($school) ? $school->name : old("name") }}"
+                />
+            </div>
             <div class="col-lg-4 mb-2">
                 <label class="form-label mb-1">{{t('Email')}} :</label>
                 <input name="email" type="text" placeholder="{{t('Email')}}"

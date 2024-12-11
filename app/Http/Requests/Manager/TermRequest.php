@@ -24,16 +24,13 @@ class TermRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'name' => 'required',
             'year_id' => 'required',
             'level_id' => 'required',
             'round' => 'required|in:september,february,may',
             'duration' => 'required',
             'demo' => 'nullable',
         ];
-        foreach(\Config::get('app.languages') as $locale)
-        {
-            $rules["name.$locale"] = 'required';
-        }
         return $rules;
     }
 }

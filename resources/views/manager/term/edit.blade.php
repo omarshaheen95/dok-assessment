@@ -10,7 +10,7 @@
     </li>
     <li class="breadcrumb-item text-muted">
         {{$title}} /
-        {{ isset($term) ? $term->getTranslation('name', app()->getLocale()):''}}
+        {{ isset($term) ? $term->name:''}}
     </li>
 @endpush
 @section('content')
@@ -22,15 +22,13 @@
             <input type="hidden" name="_method" value="PATCH"/>
         @endisset
         <div class="form-group row">
-            @foreach(\Config::get('app.languages') as $locale)
-                <div class="col-lg-4 mb-2">
-                    <label class="mb-1">{{t('Assessment Name')}} : ({{$locale}})</label>
-                    <input name="name[{{$locale}}]" type="text" placeholder="{{t('Assessment Name')}}"
-                           class="form-control"
-                           value="{{ isset($term) ? $term->getTranslation('name', $locale) : old("name[$locale]") }}"
-                    />
-                </div>
-            @endforeach
+            <div class="col-lg-4 mb-2">
+                <label class="mb-1">{{t('Assessment Name')}}</label>
+                <input name="name" type="text" placeholder="{{t('Assessment Name')}}"
+                       class="form-control"
+                       value="{{ isset($term) ? $term->name : old("name") }}"
+                />
+            </div>
             <div class="col-4 mb-2">
                 <label class="mb-1">{{t('Round')}}:</label>
                 <select class="form-control form-select" data-control="select2" data-allow-clear="true" data-placeholder="{{t('Select Round')}}" name="round">
@@ -71,10 +69,10 @@
                     </select>
                 </div>
                 <div class="col-4 mb-2">
-                    <label class="mb-1">{{t('Duration by (h)')}} :</label>
+                    <label class="mb-1">{{t('Duration by (minute)')}} :</label>
                     <input name="duration" type="number" placeholder="{{t('Duration')}}"
                            class="form-control"
-                           value="{{ isset($term) ? $term->duration : old("Duration") }}"
+                           value="{{ isset($term) ? $term->duration : 40 }}"
                     />
                 </div>
 

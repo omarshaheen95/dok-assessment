@@ -3,21 +3,12 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\ArticleQuestionResult;
-use App\Models\FillBlankAnswer;
-use App\Models\MatchQuestion;
-use App\Models\MatchQuestionResult;
 use App\Models\OptionQuestionResult;
 use App\Models\Question;
 use App\Models\SchoolGrade;
-use App\Models\SortQuestionResult;
 use App\Models\Student;
 use App\Models\StudentTerm;
-use App\Models\Subject;
 use App\Models\Term;
-use App\Models\TFQuestion;
-use App\Models\TFQuestionResult;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -125,13 +116,8 @@ class TermController extends Controller
 
                     }
                 }
-
-
             });
         }
-
-
-
         return redirect()->route('student.home')->with('term-message', t('Assessment passed successfully'));
     }
 

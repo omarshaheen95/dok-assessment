@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Level;
+use App\Models\Question;
 use App\Models\Term;
 use App\Models\Year;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,8 +20,8 @@ class YearTableSeeder extends Seeder
     {
         \DB::transaction(function () {
             $years = [
-                ['name' => ['ar' => '2023/2024', 'en' => '2023/2024'], 'default' => 0],
-                ['name' => ['ar' => '2024/2025', 'en' => '2024/2025'], 'default' => 1],
+                ['name' => '2023/2024', 'default' => 0],
+                ['name' => '2024/2025', 'default' => 1],
             ];
             foreach ($years as $year) {
                 $year = Year::query()->updateOrCreate([
@@ -35,14 +36,30 @@ class YearTableSeeder extends Seeder
                     'active' => 1,
                 ]);
 
-                Term::query()->updateOrCreate([
-                    'name' => ['en' => 'Term' . $year['name'], 'ar' => 'Term' . $year['name']],
+
+                $term = Term::query()->updateOrCreate([
+                    'name' =>  'Term' . $year['name'],
                     'level_id' => $level->id,
                     'round' => 'may',
                     'active' => true,
-                    'duration' => 1
+                    'duration' => 40
                 ]);
+
+                if ($term->wasRecentlyCreated) {
+                    $questions = [];
+                    foreach (range(1, 40) as $item) {
+                        $questions [] = [
+                            'term_id' => $term->id,
+                            'mark' => 2.5,
+                            'content' => 'Q' . $item,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
+                    Question::insert($questions);
+                }
             }
+
         });
     }
 }

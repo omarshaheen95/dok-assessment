@@ -25,6 +25,7 @@ class SchoolRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'name' => 'required',
             'logo' => 'nullable',
             'url' => 'nullable|url',
             'mobile' => 'nullable',
@@ -40,10 +41,7 @@ class SchoolRequest extends FormRequest
             $rules['email'] = 'required|email|unique:schools,email,{$id},id,deleted_at,NULL';
             $rules["password"] = 'required|min:6';
         }
-        foreach(\Config::get('app.languages') as $locale)
-        {
-            $rules["name.$locale"] = 'required';
-        }
+
         return $rules;
     }
 }

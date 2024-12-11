@@ -12,9 +12,9 @@
                     <span class="text ms-2">{{$term->name}}</span>
                 </a>
 
-                <a href="#!" class="leave-exam">
+                <a href="#!" class="leave-exam" id="leave-exam">
                     <img src="{{asset('web_assets/img/leave.svg')}}" alt="">
-                    <span class="text ms-2">{{$term->level->arab?'مغادرة الإختبار':'Leave Assessment'}}</span>
+                    <span class="text ms-2">Leave Assessment</span>
                 </a>
             </div>
         </div>
@@ -136,23 +136,10 @@
 
 @section('script')
     <script>
-        @if($term->level->arab)
-        @php
-            app()->setLocale('ar')
-        @endphp
-        $('html').attr('lang', 'ar').attr('dir', 'rtl');
-        @else
-        @php
-            app()->setLocale('en')
-        @endphp
-        $('html').attr('lang', 'en').attr('dir', 'ltr');
-        @endif
+        let TIME = "{{$term->duration}}";
     </script>
     <script src="{{asset('web_assets/js/student_term.js')}}?v={{time()}}"></script>
-
     <script>
-        let TIME = "{{$term->duration}}";
         getAndSetResults() //cache results
     </script>
-
 @endsection

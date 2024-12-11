@@ -18,15 +18,17 @@ use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Events\BeforeImport;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Maatwebsite\Excel\Validators\Failure;
 
 HeadingRowFormatter::default('none');
 
-class QuestionsImport implements ToModel, WithHeadingRow, SkipsOnFailure, SkipsOnError, WithValidation,ToCollection
+class QuestionsImport implements ToModel, WithHeadingRow, SkipsOnFailure, SkipsOnError, WithValidation,ToCollection,WithEvents
 {
     private $created_rows_count = 0;
     private $updated_rows_count = 0;
@@ -60,7 +62,6 @@ class QuestionsImport implements ToModel, WithHeadingRow, SkipsOnFailure, SkipsO
 
 
         // check if question type is Multiple choice and there are 4 options and at least one has '(Yes)'
-        if ($row['Question Type'] === 'Multiple choice') {
             $yesCount = 0;
             foreach (range(1, 4) as $i) {
                 if (!empty($row['Option ' . $i])) {
@@ -76,26 +77,19 @@ class QuestionsImport implements ToModel, WithHeadingRow, SkipsOnFailure, SkipsO
                 $this->failed_rows_count++;
                 return null; // Skip this row
             }
-        }
-
-
 
         // Create the question based on the validated data
         $question = Question::create([
             'content' => $row['Question Title'],
             'term_id' => $this->questionFile->term_id,
-            'type' => snake_case($row['Question Type']),
             'author_id' => auth()->guard(getGuard())->user()->id,
             'author_type' => auth()->guard(getGuard())->user()->getMorphClass(),
-            'mark' => $row['Mark'], // Assuming 1 mark for each question
+            'mark' => 2.5, // Assuming 1 mark for each question
             'question_file_id' => $this->questionFile->id,
         ]);
 
         // Process options and create related models (True/False, Multiple Choice, etc.)
-        $options_count = $this->processOptions($row, $question);
-//
-//
-//        $question->update(['min_mark' => $options_count]); // Update min_mark based on the number of options
+        $this->processOptions($row, $question);
 
         $this->created_rows_count++;
     }
@@ -122,9 +116,7 @@ class QuestionsImport implements ToModel, WithHeadingRow, SkipsOnFailure, SkipsO
             'Question Title' => [
                 'required',
             ],
-            'Mark' => [
-                'required','integer'
-            ],
+
 
             // Multiple choice validation (4 options are required)
             'Option 1' => 'required',
@@ -211,13 +203,21 @@ class QuestionsImport implements ToModel, WithHeadingRow, SkipsOnFailure, SkipsO
 
     public function collection(Collection $rows)
     {
-
-        $total =  collect($rows)->sum('Mark');
-
-        if ($total != 100){
-
-            $this->failures['Marks Total'] = ['The marks total not equal 100'];
-        }
+//        if (collect($rows)->count() != 40){
+//
+//            $this->failures['Marks Total'] = ['The marks total not equal 100 and the questions count not equal 40'];
+//        }
     }
-
+    public function registerEvents(): array
+    {
+        return [
+            BeforeImport::class => function (BeforeImport $event) {
+                    // Access the sheet
+                    $count = $event->reader->getSheetCount(); // Get the first sheet
+                    if ($count!= 40){
+                        throw new GeneralException("The questions count equal (".$count.") and must equal 40 and marks sum not equal 100");
+                    }
+            },
+        ];
+    }
 }

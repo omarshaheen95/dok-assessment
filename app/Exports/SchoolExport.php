@@ -32,8 +32,7 @@ class SchoolExport implements WithMapping, Responsable, WithHeadings, FromCollec
     public function headings(): array
     {
         $headers =  [
-            'Name AR',
-            'Name EN',
+            'Name',
             'Email',
             'URL',
             'Mobile',
@@ -50,8 +49,7 @@ class SchoolExport implements WithMapping, Responsable, WithHeadings, FromCollec
     public function map($row): array
     {
         return [
-            $row->getTranslation('name', 'ar'),
-            $row->getTranslation('name', 'en'),
+            $row->name,
             $row->email,
             $row->url,
             $row->mobile,

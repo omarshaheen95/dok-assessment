@@ -16,11 +16,10 @@ use Spatie\Translatable\HasTranslations;
 
 class Level extends Model
 {
-    use SoftDeletes, HasTranslations,CascadeSoftDeletes, LogsActivity;
+    use SoftDeletes,CascadeSoftDeletes, LogsActivity;
     protected $fillable = [
         'name', 'grade', 'slug', 'year_id', 'active', 'arab'
     ];
-    public $translatable = ['name'];
     protected $cascadeDeletes = ['terms'];
 
     protected static $logAttributes = [ 'name', 'year_id', 'grade', 'slug', 'active', 'arab'];
@@ -42,12 +41,7 @@ class Level extends Model
     {
         return $query
             ->when($name = $request->get('name', false), function (Builder $query) use ($name) {
-                $query->where(function (Builder $query) use ($name) {
-                    $query->where(function (Builder $query) use ($name) {
-                        $query->where(DB::raw('LOWER(name->"$.ar")'), 'like', '%' . $name . '%')
-                            ->orWhere(DB::raw('LOWER(name->"$.en")'), 'like', '%' . $name . '%');
-                    });
-                });
+                $query->where('name', 'like', '%' . $name . '%');
             })->when($year_id = $request->get('year_id', false), function (Builder $query) use ($year_id) {
                 $query->where('year_id', $year_id);
             })->when($value = $request->get('class',false),function (Builder $query) use ($value){

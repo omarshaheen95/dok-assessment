@@ -157,7 +157,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof GeneralException) {
             session()->flash('dontHide', $exception->dontHide);
 
-            return redirect()->back()->withInput()->withFlashDanger($exception->getMessage());
+            return redirect()->back()->with('message',$exception->getMessage())->with('m-class','error');
         }
 
         if ($exception instanceof \Spatie\Permission\Exceptions\UnauthorizedException) {

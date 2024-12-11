@@ -28,28 +28,28 @@
 
             <!--begin::Navbar-->
             <div class="app-navbar flex-shrink-0">
-                <!--begin::Local-->
-                <div class="app-navbar-item ms-1 ms-md-3">
-                    <!--begin::Menu toggle-->
-                        <!--begin::Item-->
-                    @if(app()->getLocale() == "ar")
-                        <a href="{{ route(getGuard().'.switch-language', 'en') }}" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px" data-kt-menu-trigger="{default:'click', lg: 'hover'}" data-kt-menu-attach="parent"
-                           data-kt-menu-placement="{{$lang=='ar'?'bottom-start':'bottom-end'}}">
-	                            <span class="symbol symbol-25px">
-                                    <img src="{{asset('assets_v1/media/flags/united-states.svg')}}" alt=""/>
-                                </span>
-                        </a>
-                    @else
-                        <a href="{{ route(getGuard().'.switch-language', 'ar') }}" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px" data-kt-menu-trigger="{default:'click', lg: 'hover'}" data-kt-menu-attach="parent"
-                           data-kt-menu-placement="{{$lang=='ar'?'bottom-start':'bottom-end'}}">
-	                            <span class="symbol symbol-25px">
-                                  <img src="{{asset('assets_v1/media/flags/united-arab-emirates.svg')}}" alt=""/>
-                                </span>
-                        </a>
-                    @endif
+{{--                <!--begin::Local-->--}}
+{{--                <div class="app-navbar-item ms-1 ms-md-3">--}}
+{{--                    <!--begin::Menu toggle-->--}}
+{{--                        <!--begin::Item-->--}}
+{{--                    @if(app()->getLocale() == "ar")--}}
+{{--                        <a href="{{ route(getGuard().'.switch-language', 'en') }}" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px" data-kt-menu-trigger="{default:'click', lg: 'hover'}" data-kt-menu-attach="parent"--}}
+{{--                           data-kt-menu-placement="{{$lang=='ar'?'bottom-start':'bottom-end'}}">--}}
+{{--	                            <span class="symbol symbol-25px">--}}
+{{--                                    <img src="{{asset('assets_v1/media/flags/united-states.svg')}}" alt=""/>--}}
+{{--                                </span>--}}
+{{--                        </a>--}}
+{{--                    @else--}}
+{{--                        <a href="{{ route(getGuard().'.switch-language', 'ar') }}" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px" data-kt-menu-trigger="{default:'click', lg: 'hover'}" data-kt-menu-attach="parent"--}}
+{{--                           data-kt-menu-placement="{{$lang=='ar'?'bottom-start':'bottom-end'}}">--}}
+{{--	                            <span class="symbol symbol-25px">--}}
+{{--                                  <img src="{{asset('assets_v1/media/flags/united-arab-emirates.svg')}}" alt=""/>--}}
+{{--                                </span>--}}
+{{--                        </a>--}}
+{{--                    @endif--}}
 
-                </div>
-                <!--end::Local-->
+{{--                </div>--}}
+{{--                <!--end::Local-->--}}
 
 {{--                @if(in_array(request()->get('guard'),['manager','school','supervisor']))--}}
 {{--                    @include('general.layout_parts.notifications')--}}

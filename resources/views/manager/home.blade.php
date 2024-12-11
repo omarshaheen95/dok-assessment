@@ -10,7 +10,7 @@
 
 @if(Auth::guard('manager')->user()->approved && Auth::guard('manager')->user()->hasDirectPermission('show statistics'))
     @section('charts')
-        <div class="row gy-5 g-xl-10">
+        <div class="row justify-content-center gy-5 g-xl-10">
             <div class="col-sm-6 col-xl-2 mb-xl-10">
                 <div class="card h-lg-100" style="background-color: #67308F;background-image:url('/new_assets/media/svg/shapes/wave-bg-red.svg')">
                     <!--begin::Body-->

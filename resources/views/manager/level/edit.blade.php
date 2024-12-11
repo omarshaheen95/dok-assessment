@@ -21,15 +21,14 @@
             <input type="hidden" name="_method" value="PATCH"/>
         @endisset
         <div class="form-group row">
-            @foreach(\Config::get('app.languages') as $locale)
-                <div class="col-lg-4 mb-2">
-                    <label class="form-label mb-1">{{t('Level Name')}} : ({{$locale}})</label>
-                    <input name="name[{{$locale}}]" type="text" placeholder="{{t('Level Name')}}"
-                           class="form-control"
-                           value="{{ isset($level) ? $level->getTranslation('name', $locale) : old("name[$locale]") }}"
-                    />
-                </div>
-            @endforeach
+
+            <div class="col-lg-4 mb-2">
+                <label class="form-label mb-1">{{t('Level Name')}}</label>
+                <input name="name" type="text" placeholder="{{t('Level Name')}}"
+                       class="form-control"
+                       value="{{ isset($level) ? $level->name : old("name") }}"
+                />
+            </div>
 
             <div class="col-lg-4 mb-2">
                 <label class="form-label mb-1">{{t('Grade')}}:</label>

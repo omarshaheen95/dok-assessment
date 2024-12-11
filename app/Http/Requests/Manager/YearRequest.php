@@ -24,12 +24,9 @@ class YearRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'name' => 'required',
             'slug' => 'nullable',
         ];
-        foreach(\Config::get('app.languages') as $locale)
-        {
-            $rules["name.$locale"] = 'required';
-        }
         return $rules;
     }
 }
